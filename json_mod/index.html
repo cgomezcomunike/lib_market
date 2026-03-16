@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic HTML Page</title>
+</head>
+<body>
+    <div id="root_origenes">
+        <input type="hidden" class="load_accion" value="load_origenes" />
+        <input type="hidden" class="accion" value="update_origenes" />
+        <div>
+            <textarea class="json_testing" style="width: 100%;" rows="30"></textarea>
+            <div class="json_result"></div>
+        </div>
+        <div>
+            <button class="json_validate"></button>
+        </div>
+    </div>
+    <script>
+        function validateJSON(root) {
+            const lang = navigator.languages[1];
+            const json = document.querySelector(`${root} > div > .json_testing`);
+            const btn = document.querySelector(`${root} > div > .json_validate`);
+            const result = document.querySelector(`${root} > div > .json_result`);
+            const load_accion = document.querySelector(`${root} > .load_accion`);
+            const accion = document.querySelector(`${root} > .accion`);
+            let validate_event;
+            const load_json = (cback) => {
+                var xhr = new XMLHttpRequest();
+                xhr.open(
+                    "POST",
+                    `https://gwxxtl3vkd.execute-api.us-east-1.amazonaws.com/default/CRM-admin-comercial?accion=${load_accion.value}`,
+                    true
+                );
+                xhr.onreadystatechange = function (aEvt) {
+                    if (xhr.readyState == 4) {
+                        if (xhr.status == 200) {
+                            const resp = JSON.parse(xhr.responseText);
+                            if(resp.error) {
+                                alert(lang === "es" ? "Error al cargando!" : "Error loading!");
+                                return;
+                            }
+                            json.value = JSON.stringify(resp.data, null, 4);
+                            if(typeof cback === "function") cback();
+                        }
+                    }
+                };
+                xhr.send(JSON.stringify({
+                    asesor_firma: localStorage.getItem("firma"),
+                }));
+            }
+            const validate = () => {
+                btn.innerHTML = lang === "es" ? "Validar JSON" : "Validate JSON";
+                btn.onclick = () => {
+                    validate_event = btn.onclick;
+                    try {
+                        const json_val = json.value.trim().replace(/\n/g, "");
+                        const evaluated = JSON.parse(json_val);
+                        json.value = JSON.stringify(evaluated, null, 4);
+                        result.innerHTML = `<div style='background-color: rgb(220 252 231); padding: 10px; color: rgb(21 128 61); border: 1px solid rgb(199 239 214);'>${lang === "es" ? "JSON Válido" : "JSON is valid"}</div>`;
+                        btn.innerHTML = 'Guardar';
+                        btn.onclick = () => {
+                            const cmd = prompt(
+                                `${lang === "es" ? "¿Desea guardar permanentemente?\nEscriba 'Modificar permanentemente'." : "Do you want to save permanently?\nWrite 'Permanently modify'."}`
+                            );
+                            if(cmd === null) {
+                                alert(lang === "es" ? "No se ha guardado." : "Not saved.");
+                            }else if(
+                                cmd.trim().replace(/\s/g, "") === ("Modificar permanentemente").trim().replace(/\s/g, "") || 
+                                cmd.trim().replace(/\s/g, "") === ("Permanently modify").trim().replace(/\s/g, "")
+                            ) {
+                                const data_send = JSON.parse(json.value);
+                                var xhr = new XMLHttpRequest();
+                                xhr.open(
+                                    "POST",
+                                    `https://gwxxtl3vkd.execute-api.us-east-1.amazonaws.com/default/CRM-admin-comercial?accion=${accion.value}`,
+                                    true
+                                );
+                                xhr.onreadystatechange = function (aEvt) {
+                                    if (xhr.readyState == 4) {
+                                        if (xhr.status == 200) {
+                                            const resp = JSON.parse(xhr.responseText);
+                                            if(resp.error) {
+                                                alert(lang === "es" ? "Error al guardar!" : "Error saving!");
+                                                return;
+                                            }
+                                            alert(lang === "es" ? "Guardado con exito!" : "Saved successfully!");
+                                        }
+                                    }
+                                };
+                                xhr.send(JSON.stringify({
+                                    asesor_firma: localStorage.getItem("firma"),
+                                    data: data_send,
+                                }));
+                            }else{
+                                alert(lang === "es" ? "Confirmación inválida!" : "Invalid confirmation!");
+                            }
+                        }
+                    } catch (error) {
+                        btn.innerHTML = lang === "es" ? "Validar JSON" : "Validate JSON";
+                        btn.onclick = validate_event;
+                        result.innerHTML = `<div style='background-color: #f1bbbb;color: red;border: solid 1px #d97e7e;padding: 10px;'>${lang === "es" ? "JSON Invalido:" : "Invalid JSON"}: ${error}</div>`;
+                    }
+                }
+            }
+            json.onkeyup = () => {
+                validate();
+            }
+            load_json(() => {
+                validate();
+            });
+        }
+        validateJSON("#root_origenes");
+    </script>
+</body>
+</html>

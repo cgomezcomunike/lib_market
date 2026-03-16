@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor WYSIWYG Sencillo</title>
+    <!-- Incluimos Font Awesome para los iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="editor-container">
+        <div class="toolbar">
+            <!-- Estilo de texto -->
+            <button data-command="bold" title="Negrita"><i class="fa-solid fa-bold"></i></button>
+            <button data-command="italic" title="Itálica"><i class="fa-solid fa-italic"></i></button>
+            <button data-command="underline" title="Subrayado"><i class="fa-solid fa-underline"></i></button>
+            <button data-command="strikeThrough" title="Tachado"><i class="fa-solid fa-strikethrough"></i></button>
+
+            <!-- Listas -->
+            <button data-command="insertUnorderedList" title="Viñetas"><i class="fa-solid fa-list-ul"></i></button>
+            <button data-command="insertOrderedList" title="Viñetas numeradas"><i class="fa-solid fa-list-ol"></i></button>
+
+            <!-- Indentación -->
+            <button data-command="indent" title="Identar"><i class="fa-solid fa-indent"></i></button>
+            <button data-command="outdent" title="Desidentar"><i class="fa-solid fa-outdent"></i></button>
+
+            <!-- Alineación -->
+            <button data-command="justifyLeft" title="Alinear Izquierda"><i class="fa-solid fa-align-left"></i></button>
+            <button data-command="justifyCenter" title="Alinear Centro"><i class="fa-solid fa-align-center"></i></button>
+            <button data-command="justifyRight" title="Alinear Derecha"><i class="fa-solid fa-align-right"></i></button>
+            <button data-command="justifyFull" title="Justificar"><i class="fa-solid fa-align-justify"></i></button>
+
+            <!-- Limpiar -->
+            <button data-command="removeFormat" title="Quitar Formato"><i class="fa-solid fa-eraser"></i></button>
+        </div>
+        <div id="editor" contenteditable="true">
+            <p>¡Hola! Empieza a escribir aquí...</p>
+            <p>Puedes <b>seleccionar texto</b> y aplicar los formatos de la barra de herramientas.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

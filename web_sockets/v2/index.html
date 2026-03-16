@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Sockets</title>
+</head>
+
+<body>
+	<div id="app"></div>
+	<script>
+		const main = document.createElement("script");
+		main.src = "./main.js?" + Math.ceil(Math.random() * Date.now());
+		document.body.appendChild(main);
+	</script>
+</body>
+
+</html>
+
+<template name="main_view">
+	<section class="main_chat">
+		<div>
+			<div>{%user%}</div>
+			<div id="users_alive"></div>
+			<div id="groups"></div>
+			<div id="group_users"></div>
+		</div>
+		<div>
+			<audio id="chatAudio">
+				<source src="https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3"
+					type="audio/mpeg">
+			</audio>
+			<div id="chat_body"></div>
+		</div>
+	</section>
+	<section>
+		<div id="input_messages"></div>
+	</section>
+</template>
+
+<template name="messages">
+	<section>
+		<div>Escribir a: {%user_to%}</div>
+		<form id="send_message_form">
+			<div>
+				<input type="text" id="message_text" />
+			</div>
+			<div>
+				<input type="submit" value=" > " />
+			</div>
+		</form>
+		<button id="send_beep">BEEP</button>
+	</section>
+</template>
+
+<template name="new_group_form">
+	<section>
+		<form id="create_gourp_form">
+			<div>
+				<input type="text" id="new_group_name" />
+			</div>
+			<div>
+				<input type="submit" value="Guardar" />
+			</div>
+		</form>
+	</section>
+</template>
